@@ -36,7 +36,10 @@ class CategoryAPIController extends AppBaseController
             $request->get('limit')
         );
 
-        return $this->sendResponse(CategoryResource::collection($categories), 'Categories retrieved successfully');
+        return $this->sendResponse(
+            CategoryResource::collection($categories),
+            __('messages.retrieved', ['model' => __('models/categories.plural')])
+        );
     }
 
     /**
@@ -49,7 +52,10 @@ class CategoryAPIController extends AppBaseController
 
         $category = $this->categoryRepository->create($input);
 
-        return $this->sendResponse(new CategoryResource($category), 'Category saved successfully');
+        return $this->sendResponse(
+            new CategoryResource($category),
+            __('messages.saved', ['model' => __('models/categories.singular')])
+        );
     }
 
     /**
@@ -62,10 +68,15 @@ class CategoryAPIController extends AppBaseController
         $category = $this->categoryRepository->find($id);
 
         if (empty($category)) {
-            return $this->sendError('Category not found');
+            return $this->sendError(
+                __('messages.not_found', ['model' => __('models/categories.singular')])
+            );
         }
 
-        return $this->sendResponse(new CategoryResource($category), 'Category retrieved successfully');
+        return $this->sendResponse(
+            new CategoryResource($category),
+            __('messages.retrieved', ['model' => __('models/categories.singular')])
+        );
     }
 
     /**
@@ -80,12 +91,17 @@ class CategoryAPIController extends AppBaseController
         $category = $this->categoryRepository->find($id);
 
         if (empty($category)) {
-            return $this->sendError('Category not found');
+            return $this->sendError(
+                __('messages.not_found', ['model' => __('models/categories.singular')])
+            );
         }
 
         $category = $this->categoryRepository->update($input, $id);
 
-        return $this->sendResponse(new CategoryResource($category), 'Category updated successfully');
+        return $this->sendResponse(
+            new CategoryResource($category),
+            __('messages.updated', ['model' => __('models/categories.singular')])
+        );
     }
 
     /**
@@ -100,11 +116,16 @@ class CategoryAPIController extends AppBaseController
         $category = $this->categoryRepository->find($id);
 
         if (empty($category)) {
-            return $this->sendError('Category not found');
+            return $this->sendError(
+                __('messages.not_found', ['model' => __('models/categories.singular')])
+            );
         }
 
         $category->delete();
 
-        return $this->sendSuccess('Category deleted successfully');
+        return $this->sendResponse(
+            $id,
+            __('messages.deleted', ['model' => __('models/categories.singular')])
+        );
     }
 }
