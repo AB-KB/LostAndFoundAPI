@@ -22,4 +22,7 @@ Route::prefix("v1")->group(function () {
 
     Route::resource('categories', App\Http\Controllers\API\CategoryAPIController::class)
         ->except(['create', 'edit']);
+
+    Route::resource('notifications', App\Http\Controllers\API\NotificationAPIController::class)
+        ->except(['create', 'edit']);
 });
