@@ -20,6 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix("v1")->group(function () {
 
+    Route::prefix("auth")->group(function(){
+
+        Route::post("login", [App\Http\Controllers\API\AuthController::class, "login"]);
+        Route::post("register", [App\Http\Controllers\API\AuthController::class, "register"]);
+    });
+
     Route::resource('categories', App\Http\Controllers\API\CategoryAPIController::class)
         ->except(['create', 'edit']);
 
