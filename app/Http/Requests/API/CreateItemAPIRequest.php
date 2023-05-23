@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use App\Models\Notification;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Item;
+use InfyOm\Generator\Request\APIRequest;
 
-class UpdateNotificationRequest extends FormRequest
+class CreateItemAPIRequest extends APIRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,6 @@ class UpdateNotificationRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Notification::$rules;
-        
-        return $rules;
+        return Item::$rules;
     }
 }

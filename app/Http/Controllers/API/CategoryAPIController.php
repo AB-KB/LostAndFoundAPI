@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\CategoryResource;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CategoryAPIController
@@ -55,27 +56,6 @@ class CategoryAPIController extends AppBaseController
         return $this->sendResponse(
             new CategoryResource($category),
             __('messages.saved', ['model' => __('models/categories.singular')])
-        );
-    }
-
-    /**
-     * Display the specified Category.
-     * GET|HEAD /categories/{id}
-     */
-    public function show($id): JsonResponse
-    {
-        /** @var Category $category */
-        $category = $this->categoryRepository->find($id);
-
-        if (empty($category)) {
-            return $this->sendError(
-                __('messages.not_found', ['model' => __('models/categories.singular')])
-            );
-        }
-
-        return $this->sendResponse(
-            new CategoryResource($category),
-            __('messages.retrieved', ['model' => __('models/categories.singular')])
         );
     }
 
@@ -127,5 +107,25 @@ class CategoryAPIController extends AppBaseController
             $id,
             __('messages.deleted', ['model' => __('models/categories.singular')])
         );
+    }
+
+    /**
+     * Get the popular Category from storage.
+     * GET /categories/popular
+     *
+     * @throws \Exception
+     */
+    public function popular()
+    {
+
+
+        $result = DB::select("SELECT COUNT(c.id) as total, c.name FROM categories c
+        INNER JOIN items i ON i.category_id = c.id
+        GROUP BY c.id
+        ORDER BY COUNT(c.id) DESC
+        LIMIT 3");
+
+
+        return $this->sendResponse($result, __("success"));
     }
 }

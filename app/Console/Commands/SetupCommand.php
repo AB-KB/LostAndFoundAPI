@@ -39,11 +39,11 @@ class SetupCommand extends Command
                 DB::unprepared("
 
                     INSERT INTO `provinces` (`id`, `name`) VALUES
-                    (1, 'MVK'),
-                    (2, 'South Provice'),
-                    (3, 'Wester Provice'),
-                    (4, 'North Provice'),
-                    (5, 'East  Provice');
+                    (1, 'Kigali City'),
+                    (2, 'Southern Province'),
+                    (3, 'Western Province'),
+                    (4, 'Northern Province'),
+                    (5, 'Eastern  Province');
 
 
                     INSERT INTO `districts` (`id`, `name`, `province_id`) VALUES

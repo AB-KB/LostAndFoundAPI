@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\GeoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,24 +28,43 @@ Route::prefix("v1")->group(function () {
         Route::post("register", [App\Http\Controllers\API\AuthController::class, "register"]);
     });
 
+    Route::prefix("geo")->group(function () {
+
+        Route::get("provinces", [GeoController::class, "provinces"]);
+        Route::get("provinces/{province_id}/districts", [GeoController::class, "districts"]);
+        Route::get("districts/{district_id}/sectors", [GeoController::class, "sectors"]);
+        Route::get("sectors/{sector_id}/cells", [GeoController::class, "cells"]);
+        Route::get("cells/{cell_id}/villages", [GeoController::class, "villages"]);
+    });
+
+
 
     Route::group(["middleware" => "auth"], function () {
 
-        Route::resource('categories', App\Http\Controllers\API\CategoryAPIController::class)
-            ->except(['create', 'edit']);
+        Route::prefix("notifications")->group(function () {
 
+            Route::put('', [App\Http\Controllers\API\NotificationAPIController::class, "index"]);
+            Route::put('/{id}', [App\Http\Controllers\API\NotificationAPIController::class, "read"]);
+        });
 
-        Route::put('notifications', [App\Http\Controllers\API\NotificationAPIController::class, "index"]);
-        Route::put('notifications/{id}', [App\Http\Controllers\API\NotificationAPIController::class, "read"]);
+        Route::prefix("items")->group(function(){
 
+            Route::get("", [App\Http\Controllers\API\ItemAPIController::class, "index"]);
+        });
 
-        Route::prefix("geo")->group(function () {
+        Route::prefix("categories")->group(function () {
 
-            Route::get("provinces", [GeoController::class, "provinces"]);
-            Route::get("provinces/{province_id}/districts", [GeoController::class, "districts"]);
-            Route::get("districts/{district_id}/sectors", [GeoController::class, "sectors"]);
-            Route::get("sectors/{sector_id}/cells", [GeoController::class, "cells"]);
-            Route::get("cells/{cell_id}/villages", [GeoController::class, "villages"]);
+            Route::get("", [App\Http\Controllers\API\CategoryAPIController::class, "index"]);
+            Route::post("", [App\Http\Controllers\API\CategoryAPIController::class, "store"])
+                ->middleware("auth:admin");
+            Route::get("popular", [App\Http\Controllers\API\CategoryAPIController::class, "popular"]);
+            Route::put("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "update"]);
+            Route::delete("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
+        });
+
+        Route::group(["middleware" => "auth:admin"], function () {
+
+            Route::get("community", [DashboardController::class, "getComminityDetails"]);
         });
     });
 });
