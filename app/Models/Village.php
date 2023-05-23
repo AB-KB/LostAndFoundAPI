@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Village extends Model
 {
     use HasFactory;
-    public $table = 'vilages';
+    public $table = 'villages';
 
     public $fillable = [
         'name',

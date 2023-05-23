@@ -24,7 +24,10 @@ class RegisterUserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "name"=> "required|string",
+            "email"=> "required|email",
+            "password"=> "required|string|min:6|confirmed",
+            "village_id"=> "required|numeric|min:1"
         ];
     }
 }

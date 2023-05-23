@@ -43,49 +43,11 @@ class NotificationAPIController extends AppBaseController
     }
 
     /**
-     * Store a newly created Notification in storage.
-     * POST /notifications
-     */
-    public function store(CreateNotificationAPIRequest $request): JsonResponse
-    {
-        $input = $request->all();
-
-        $notification = $this->notificationRepository->create($input);
-
-        return $this->sendResponse(
-            new NotificationResource($notification),
-            __('messages.saved', ['model' => __('models/notifications.singular')])
-        );
-    }
-
-    /**
-     * Display the specified Notification.
-     * GET|HEAD /notifications/{id}
-     */
-    public function show($id): JsonResponse
-    {
-        /** @var Notification $notification */
-        $notification = $this->notificationRepository->find($id);
-
-        if (empty($notification)) {
-            return $this->sendError(
-                __('messages.not_found', ['model' => __('models/notifications.singular')])
-            );
-        }
-
-        return $this->sendResponse(
-            new NotificationResource($notification),
-            __('messages.retrieved', ['model' => __('models/notifications.singular')])
-        );
-    }
-
-    /**
-     * Update the specified Notification in storage.
+     * mark read the specified Notification in storage.
      * PUT/PATCH /notifications/{id}
      */
-    public function update($id, UpdateNotificationAPIRequest $request): JsonResponse
+    public function read($id): JsonResponse
     {
-        $input = $request->all();
 
         /** @var Notification $notification */
         $notification = $this->notificationRepository->find($id);
@@ -96,7 +58,9 @@ class NotificationAPIController extends AppBaseController
             );
         }
 
-        $notification = $this->notificationRepository->update($input, $id);
+        $notification = $this->notificationRepository->update([
+            "status"=> "read",
+        ], $id);
 
         return $this->sendResponse(
             new NotificationResource($notification),

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("title");
             $table->text("content");
+            $table->enum("status", ["read", "not_read"])->default("not_read");
             $table->unsignedBigInteger("user_id");
             $table->foreign("user_id")
                 ->on("users")

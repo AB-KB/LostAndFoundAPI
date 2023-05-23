@@ -29,8 +29,8 @@ class Cell extends Model
         return $this->belongsTo(\App\Models\Sector::class, 'sector_id');
     }
 
-    public function vilages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function villages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(\App\Models\Vilage::class, 'cell_id');
+        return $this->hasMany(\App\Models\village::class, 'cell_id');
     }
 }

@@ -2659,10 +2659,10 @@ class SetupCommand extends Command
 
 
                     --
-                    -- Dumping data for table `vilages`
+                    -- Dumping data for table `villages`
                     --
 
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('101010102', 'Gihanga', '1010101'),
                     ('101010103', 'Iterambere', '1010101'),
                     ('101010104', 'Izuba', '1010101'),
@@ -4066,7 +4066,7 @@ class SetupCommand extends Command
                     ('201050509', 'Nyarukurazo', '2010505'),
                     ('201050510', 'Sabununga', '2010505'),
                     ('201060101', 'Birambo', '2010601');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('201060102', 'Bweramana', '2010601'),
                     ('201060103', 'Cyerezo', '2010601'),
                     ('201060104', 'Cyikirehe', '2010601'),
@@ -5472,7 +5472,7 @@ class SetupCommand extends Command
                     ('204100603', 'Umurambi', '2041006'),
                     ('204100701', 'Igerero', '2041007'),
                     ('204100702', 'Kigarama', '2041007');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('204100703', 'Mbagabaga', '2041007'),
                     ('204100704', 'Muginga', '2041007'),
                     ('204100705', 'Rugarama', '2041007'),
@@ -6878,7 +6878,7 @@ class SetupCommand extends Command
                     ('207060604', 'Ryaruyange', '2070606'),
                     ('207070101', 'Munyinya', '2070701'),
                     ('207070102', 'Muzamuzi', '2070701');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('207070103', 'Ndaragati', '2070701'),
                     ('207070104', 'Ryakiyange', '2070701'),
                     ('207070201', 'Cyanika', '2070702'),
@@ -8277,7 +8277,7 @@ class SetupCommand extends Command
                     ('302110406', 'Gishowa', '3021104'),
                     ('302110407', 'Kaje', '3021104'),
                     ('302110408', 'Kamunyurwe', '3021104');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('302110409', 'Kazo', '3021104'),
                     ('302110410', 'Mpati', '3021104'),
                     ('302110411', 'Ngoma', '3021104'),
@@ -9688,7 +9688,7 @@ class SetupCommand extends Command
                     ('305110103', 'Kabeza', '3051101'),
                     ('305110104', 'Kabusunzu', '3051101'),
                     ('305110105', 'Kanyinya', '3051101');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('305110106', 'Nyabisindu', '3051101'),
                     ('305110107', 'Nyamabuye', '3051101'),
                     ('305110108', 'Nyarubari', '3051101'),
@@ -11104,7 +11104,7 @@ class SetupCommand extends Command
                     ('401040601', 'Gakoma', '4010406'),
                     ('401040602', 'Mataba', '4010406'),
                     ('401040603', 'Murambo', '4010406');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('401040604', 'Nyamwiza', '4010406'),
                     ('401040605', 'Nyarubuye', '4010406'),
                     ('401040701', 'Gahondo', '4010407'),
@@ -12508,7 +12508,7 @@ class SetupCommand extends Command
                     ('403150305', 'Rutagara', '4031503'),
                     ('403150306', 'Vubiro', '4031503'),
                     ('403150401', 'Kabagabo', '4031504');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('403150402', 'Kabeza', '4031504'),
                     ('403150403', 'Kimanzi', '4031504'),
                     ('403150404', 'Nyakagezi', '4031504'),
@@ -13922,7 +13922,7 @@ class SetupCommand extends Command
                     ('501060701', 'Akabeza', '5010607'),
                     ('501060702', 'Kibare', '5010607'),
                     ('501060703', 'Rubirizi', '5010607');
-                    INSERT INTO `vilages` (`id`, `name`, `cell_id`) VALUES
+                    INSERT INTO `villages` (`id`, `name`, `cell_id`) VALUES
                     ('501060801', 'Amagaju', '5010608'),
                     ('501060802', 'Urugero', '5010608'),
                     ('501060803', 'Urugwiro', '5010608'),
