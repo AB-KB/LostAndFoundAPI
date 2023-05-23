@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\GeoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,14 @@ Route::prefix("v1")->group(function () {
 
     Route::resource('notifications', App\Http\Controllers\API\NotificationAPIController::class)
         ->except(['create', 'edit']);
+
+
+    Route::prefix("geo")->group(function(){
+
+        Route::get("provinces", [GeoController::class, "provinces"]);
+        Route::get("provinces/{province_id}/districts", [GeoController::class, "districts"]);
+        Route::get("districts/{district_id}/sectors", [GeoController::class, "sectors"]);
+        Route::get("sectors/{sector_id}/cells", [GeoController::class, "cells"]);
+        Route::get("cells/{cell_id}/vilages", [GeoController::class, "vilages"]);
+    });
 });
