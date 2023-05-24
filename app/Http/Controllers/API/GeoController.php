@@ -17,52 +17,42 @@ class GeoController extends AppBaseController
 
         $provinces = Province::all();
 
-        return $this->sendResponse([
-            "provinces" => $provinces->toArray(),
-        ], __("Provinces"));
+        return $this->sendResponse($provinces->toArray(), __("Provinces"));
     }
 
     public function districts(int $province_id)
     {
 
         $districts = District::where("province_id", $province_id)
-            ->all();
+            ->get();
 
-        return $this->sendResponse([
-            "districts" => $districts->toArray(),
-        ], __("Districts"));
+        return $this->sendResponse($districts->toArray(), __("Districts"));
     }
 
     public function sectors(int $district_id)
     {
 
         $sectors = Sector::where("district_id", $district_id)
-            ->all();
+            ->get();
 
-        return $this->sendResponse([
-            "sectors" => $sectors->toArray(),
-        ], __("Sectors"));
+        return $this->sendResponse($sectors->toArray(), __("Sectors"));
     }
 
     public function cells(int $sector_id)
     {
 
         $cells = Cell::where("sector_id", $sector_id)
-            ->all();
+            ->get();
 
-        return $this->sendResponse([
-            "cells" => $cells->toArray(),
-        ], __("cells"));
+        return $this->sendResponse($cells->toArray(), __("cells"));
     }
 
     public function villages(int $cell_id)
     {
 
         $villages = Village::where("cell_id", $cell_id)
-            ->all();
+            ->get();
 
-        return $this->sendResponse([
-            "villages" => $villages->toArray(),
-        ], __("villages"));
+        return $this->sendResponse($villages->toArray(), __("villages"));
     }
 }

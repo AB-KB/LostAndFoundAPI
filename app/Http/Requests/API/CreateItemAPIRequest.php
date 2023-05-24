@@ -24,6 +24,12 @@ class CreateItemAPIRequest extends APIRequest
      */
     public function rules()
     {
-        return Item::$rules;
+        return [
+            'name' => 'required|string|max:255',
+            'type' => 'required|string|max:255|in:found,lost',
+            'cell_id' => 'required',
+            'category_id' => 'required',
+            'additional_info'=> "nullable|array"
+        ];
     }
 }

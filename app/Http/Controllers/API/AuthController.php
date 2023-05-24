@@ -24,28 +24,27 @@ class AuthController extends AppBaseController
         $village_id = $request->village_id;
 
         $emailExists = User::where("email", $email)->exists();
-        if($emailExists){
+        if ($emailExists) {
 
             throw new InvalidDataGivenException(__("Email already exists"));
         }
 
         $villageExists = Village::where("id", $village_id)->exists();
-        if(!$villageExists){
+        if (!$villageExists) {
 
             throw new ItemNotFoundException(__("Village not found"));
         }
 
         $user = User::create([
-            "name"=> $name,
-            "email"=> $email,
-            "password"=> $password,
-            "village_id"=> $village_id,
+            "name" => $name,
+            "email" => $email,
+            "password" => $password,
+            "village_id" => $village_id,
         ]);
 
         return $this->sendResponse([
-            "user"=> $user->only(["id", "name"])
-        ], __("User :name successfully created", ["name"=> $user->name]));
-
+            "user" => $user->only(["id", "name"])
+        ], __("User :name successfully created", ["name" => $user->name]));
     }
 
     public function login(LoginUserRequest $request)
@@ -54,21 +53,25 @@ class AuthController extends AppBaseController
         $username = $request->username;
         $password = $request->password;
 
-        /** @var User */
-        $user = User::query()
-            ->when(isValidEmailAddress($username, fn($qb) => $qb->where("email", $username)))
-            ->when(!isValidEmailAddress($username, fn($qb) => $qb->where("phone_number", $username)))
-            ->first();
 
+        /** @var User */
+        $userQuery = User::query();
+        if (isValidEmailAddress($username)) {
+            $userQuery->where("email", $username);
+        } else {
+            $userQuery->where("phone_number", $username);
+        }
+
+        $user = $userQuery->first();
         if (is_null($user)) {
 
-            return $this->sendError(__("Wrong credentials", Response::HTTP_UNAUTHORIZED));
+            return $this->sendError(__("Wrong credentials"), Response::HTTP_UNAUTHORIZED);
         }
 
         $matchPassword = Hash::check($password, $user->password);
         if (!$matchPassword) {
 
-            return $this->sendError(__("Wrong credentials", Response::HTTP_UNAUTHORIZED));
+            return $this->sendError(__("Wrong credentials"),  Response::HTTP_UNAUTHORIZED);
         }
 
         $expiresIn = now()->addMonth();

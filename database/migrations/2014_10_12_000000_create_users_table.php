@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string("profile")->nullable();
             $table->string("phone_number")->nullable();
             $table->string("village_id");
+            $table->enum("role", ["normal_user", "admin"])->default("normal_user");
             $table->rememberToken();
             $table->timestamps();
         });

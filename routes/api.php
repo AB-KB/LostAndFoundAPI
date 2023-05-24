@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\GeoController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\StatisticsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 Route::prefix("v1")->group(function () {
 
@@ -26,6 +23,11 @@ Route::prefix("v1")->group(function () {
 
         Route::post("login", [App\Http\Controllers\API\AuthController::class, "login"]);
         Route::post("register", [App\Http\Controllers\API\AuthController::class, "register"]);
+    });
+
+    Route::prefix("user")->middleware("auth:sanctum")->group(function () {
+
+        Route::get("me", [App\Http\Controllers\API\UserController::class, "profile"]);
     });
 
     Route::prefix("geo")->group(function () {
@@ -39,7 +41,7 @@ Route::prefix("v1")->group(function () {
 
 
 
-    Route::group(["middleware" => "auth"], function () {
+    Route::group(["middleware" => "auth:sanctum"], function () {
 
         Route::prefix("notifications")->group(function () {
 
@@ -47,9 +49,10 @@ Route::prefix("v1")->group(function () {
             Route::put('/{id}', [App\Http\Controllers\API\NotificationAPIController::class, "read"]);
         });
 
-        Route::prefix("items")->group(function(){
+        Route::prefix("items")->group(function () {
 
             Route::get("", [App\Http\Controllers\API\ItemAPIController::class, "index"]);
+            Route::post("", [App\Http\Controllers\API\ItemAPIController::class, "store"]);
         });
 
         Route::prefix("categories")->group(function () {
@@ -57,14 +60,21 @@ Route::prefix("v1")->group(function () {
             Route::get("", [App\Http\Controllers\API\CategoryAPIController::class, "index"]);
             Route::post("", [App\Http\Controllers\API\CategoryAPIController::class, "store"])
                 ->middleware("auth:admin");
-            Route::get("popular", [App\Http\Controllers\API\CategoryAPIController::class, "popular"]);
             Route::put("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "update"]);
-            Route::delete("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
+            Route::delete("Route{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
         });
 
-        Route::group(["middleware" => "auth:admin"], function () {
+        Route::group(["prefix" => "admin"], function () {
 
             Route::get("community", [DashboardController::class, "getComminityDetails"]);
+            Route::get("popular-categories", [App\Http\Controllers\API\CategoryAPIController::class, "popular"]);
+            Route::prefix("statistics")->group(function () {
+
+                Route::get("active-members", [StatisticsController::class, "activeMembers"]);
+                Route::get("lost-items", [StatisticsController::class, "lostItems"]);
+                Route::get("found-items", [StatisticsController::class, "foundItems"]);
+                Route::get("overall", [StatisticsController::class, "overall"]);
+            });
         });
     });
 });

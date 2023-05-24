@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Resources\ItemResource;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class ItemAPIController
@@ -30,14 +31,17 @@ class ItemAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $items = $this->itemRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
+        $pagination = $this->itemRepository->paginate(
+            perPage: 10,
+            columns: ["*"]
         );
 
-        return $this->sendResponse(
-            ItemResource::collection($items),
+        $pagination->through(function(Item $item){
+            return new ItemResource($item);
+        });
+
+        return $this->sendPaginatedResponse(
+            $pagination,
             __('messages.retrieved', ['model' => __('models/items.plural')])
         );
     }
@@ -49,6 +53,7 @@ class ItemAPIController extends AppBaseController
     public function store(CreateItemAPIRequest $request): JsonResponse
     {
         $input = $request->all();
+        $input["added_by"] = Auth::id();
 
         $item = $this->itemRepository->create($input);
 

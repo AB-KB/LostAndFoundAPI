@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Category;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -15216,6 +15217,28 @@ class SetupCommand extends Command
                     ('503100318', 'Rurama', '5031003'),
                     ('503100319', 'Ruyonza', '5031003');
                 ");
+
+                Category::insert(
+                    collect([
+                        [
+                            "name" => "Mobile"
+                        ],
+                        [
+                            "name" => "Laptop"
+                        ],
+                        [
+                            "name" => "ID"
+                        ],
+                        [
+                            "name" => "Wallet"
+                        ],
+                    ])
+                        ->map(function ($item) {
+                            $item["created_at"] = now();
+                            $item["updated_at"] = now();
+                            return $item;
+                        })->toArray()
+                );
             });
 
             $this->info("Finished setting up the project");

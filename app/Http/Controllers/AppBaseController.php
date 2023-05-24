@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\AbstractPaginator;
 use InfyOm\Generator\Utils\ResponseUtil;
 
 /**
@@ -15,6 +17,22 @@ use InfyOm\Generator\Utils\ResponseUtil;
  */
 class AppBaseController extends Controller
 {
+    public function sendPaginatedResponse(LengthAwarePaginator $result, $message)
+    {
+
+
+        $meta = collect($result)->only(["from", "to","last_page","total", "per_page"]);
+        $data = collect($result)->only(["data"]);
+
+        return response()
+            ->json([
+                'success' => true,
+                'data'    => $data["data"],
+                'meta'    => $meta,
+                'message' => $message,
+            ]);
+    }
+
     public function sendResponse($result, $message)
     {
         return response()->json(ResponseUtil::makeResponse($message, $result));

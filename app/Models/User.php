@@ -23,6 +23,7 @@ class User extends Authenticatable implements ImageableContract
         'name',
         'email',
         'password',
+        'village_id',
     ];
 
     /**
@@ -48,5 +49,11 @@ class User extends Authenticatable implements ImageableContract
     public static function imageableFields(): array
     {
         return ['profile'];
+    }
+
+
+    public function ads(){
+
+        return $this->hasMany(Item::class, "added_by", "id");
     }
 }

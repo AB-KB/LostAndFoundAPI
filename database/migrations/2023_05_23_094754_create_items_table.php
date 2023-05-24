@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->enum("type", ["found", "lost"]);
-            $table->enum("status", ["pending", "processed"]);
+            $table->enum("status", ["pending", "processed"])->default("pending");
             $table->unsignedBigInteger("cell_id");
             $table->foreign("cell_id")
                 ->on("cells")
@@ -26,6 +26,11 @@ return new class extends Migration
             $table->foreign("category_id")
                 ->on("categories")
                 ->references("id");
+            $table->unsignedBigInteger("added_by");
+            $table->foreign("added_by")
+                ->on("users")
+                ->references("id");
+            $table->json("additional_info")->nullable();
             $table->timestamps();
         });
     }
