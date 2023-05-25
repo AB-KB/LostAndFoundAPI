@@ -75,6 +75,7 @@ Route::prefix("v1")->group(function () {
                 Route::get("found-items", [StatisticsController::class, "foundItems"]);
                 Route::get("overall", [StatisticsController::class, "overall"]);
             });
+            Route::get("list-users", [App\Http\Controllers\API\UserController::class, "list"]);
         });
     });
 });

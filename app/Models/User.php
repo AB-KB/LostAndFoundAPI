@@ -56,4 +56,10 @@ class User extends Authenticatable implements ImageableContract
 
         return $this->hasMany(Item::class, "added_by", "id");
     }
+
+
+    public function village(){
+
+        return $this->belongsTo(Village::class);
+    }
 }
