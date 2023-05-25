@@ -26,6 +26,7 @@ class UserController extends AppBaseController
             "name" => $user->name,
             "role" => $user->role,
             "email" => $user->email,
+            "phone_number" => $user->phone_number,
             "pendingItems" => $pendingItems,
             "processedItems" => $processedItems,
         ], __("User profile"));

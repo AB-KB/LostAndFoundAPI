@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\AbstractPaginator;
 use InfyOm\Generator\Utils\ResponseUtil;
@@ -21,7 +22,7 @@ class AppBaseController extends Controller
     {
 
 
-        $meta = collect($result)->only(["from", "to","last_page","total", "per_page"]);
+        $meta = collect($result)->only(["from", "to", "last_page", "total", "per_page"]);
         $data = collect($result)->only(["data"]);
 
         return response()
@@ -49,5 +50,14 @@ class AppBaseController extends Controller
             'success' => true,
             'message' => $message
         ], 200);
+    }
+
+
+    public function sendExceptionError(Exception $e)
+    {
+
+        [$message, $status] = getHttpMessageAndStatusCodeFromException($e);
+
+        return $this->sendError($message, $status);
     }
 }

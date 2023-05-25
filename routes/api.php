@@ -54,7 +54,8 @@ Route::prefix("v1")->group(function () {
             Route::get("", [App\Http\Controllers\API\ItemAPIController::class, "index"]);
             Route::post("", [App\Http\Controllers\API\ItemAPIController::class, "store"]);
             Route::get("{id}", [App\Http\Controllers\API\ItemAPIController::class, "show"])->whereNumber("id");
-
+            Route::put("{id}", [App\Http\Controllers\API\ItemAPIController::class, "update"])->whereNumber("id");
+            Route::delete("{id}", [App\Http\Controllers\API\ItemAPIController::class, "destroy"])->whereNumber("id");
         });
 
         Route::prefix("categories")->group(function () {
@@ -63,7 +64,7 @@ Route::prefix("v1")->group(function () {
             Route::post("", [App\Http\Controllers\API\CategoryAPIController::class, "store"])
                 ->middleware("auth:admin");
             Route::put("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "update"]);
-            Route::delete("Route{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
+            Route::delete("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
         });
 
         Route::group(["prefix" => "admin"], function () {
