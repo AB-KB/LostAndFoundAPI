@@ -42,7 +42,7 @@ class AuthController extends AppBaseController
             }
 
             $phoneExists = User::where("phone_number", $phone_number)->exists();
-            if ($phoneExists) {
+            if ($phoneExists && !is_null($phone_number)) {
 
                 throw new InvalidDataGivenException(__("Phone number already exists"));
             }

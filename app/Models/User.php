@@ -63,4 +63,10 @@ class User extends Authenticatable implements ImageableContract
 
         return $this->belongsTo(Village::class);
     }
+
+
+    public function isAdmin(){
+
+        return $this->role == "admin";
+    }
 }

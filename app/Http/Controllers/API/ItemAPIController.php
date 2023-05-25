@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Exceptions\InvalidDataGivenException;
+use App\Exceptions\ItemNotFoundException;
 use App\Http\Requests\API\CreateItemAPIRequest;
 use App\Http\Requests\API\UpdateItemAPIRequest;
 use App\Models\Item;
@@ -9,8 +11,12 @@ use App\Repositories\ItemRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Http\Requests\API\OpenClaimRequest;
 use App\Http\Resources\ItemResource;
+use App\Models\ItemMessageThread;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class ItemAPIController
@@ -36,7 +42,7 @@ class ItemAPIController extends AppBaseController
             columns: ["*"]
         );
 
-        $pagination->through(function(Item $item){
+        $pagination->through(function (Item $item) {
             return new ItemResource($item);
         });
 
@@ -132,5 +138,85 @@ class ItemAPIController extends AppBaseController
             $id,
             __('messages.deleted', ['model' => __('models/items.singular')])
         );
+    }
+
+
+    public function openClaim(OpenClaimRequest $request, int $id)
+    {
+
+        try {
+            $text = $request->claim;
+            $userId = Auth::id();
+
+            $item = Item::find($id);
+            if (is_null($item)) {
+
+                throw new ItemNotFoundException(__("Item not found"));
+            }
+
+            $threadExists =  ItemMessageThread::where([
+                ["item_id", $id],
+                ["user_id", $userId],
+            ])->exists();
+            if ($threadExists) {
+
+                throw new InvalidDataGivenException(__("Thread already exists"));
+            }
+
+
+            DB::transaction(function () use ($userId, $text, $id) {
+
+                $thread = ItemMessageThread::create([
+                    "item_id" => $id,
+                    "user_id" => $userId,
+                ]);
+
+                $thread->messages()->create([
+                    "text" => $text,
+                    "is_from_admin" => false,
+                    "admin_read"=> false,
+                    "normal_user_read"=> true,
+                ]);
+            });
+
+            return $this->sendSuccess(__("Claim was opened"));
+        } catch (Exception $th) {
+
+            return $this->sendExceptionError($th);
+        }
+    }
+
+    public function getClaim(int $id)
+    {
+
+        try {
+            $userId = Auth::id();
+            $item = Item::find($id);
+            if (is_null($item)) {
+
+                throw new ItemNotFoundException(__("Item not found"));
+            }
+
+            $thread =  ItemMessageThread::where([
+                ["item_id", $id],
+                ["user_id", $userId],
+            ])->first();
+            if (is_null($thread)) {
+
+                throw new ItemNotFoundException(__("Thread not found"));
+            }
+
+            $result = [
+                "id" => $thread->id,
+                "item" => $thread->item->only(["id", "name", "type"]),
+                "user" => $thread->user->only(["id", "name"]),
+                "lastMessage" => $thread->lastMessage->only(["id", "text"]),
+            ];
+
+            return $this->sendResponse($result, __("Claim"));
+        } catch (Exception $th) {
+
+            return $this->sendExceptionError($th);
+        }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\API;
 
-use App\Models\Item;
-use InfyOm\Generator\Request\APIRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateItemAPIRequest extends APIRequest
+class RespondToMessage extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,12 +19,12 @@ class UpdateItemAPIRequest extends APIRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function rules()
     {
-        $rules = Item::$rules;
-
-        return $rules;
+        return [
+            "message"=> "required|string"
+        ];
     }
 }

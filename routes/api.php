@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\API\DashboardController;
 use App\Http\Controllers\API\GeoController;
+use App\Http\Controllers\API\MessageController as APIMessageController;
 use App\Http\Controllers\API\StatisticsController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +58,8 @@ Route::prefix("v1")->group(function () {
             Route::get("{id}", [App\Http\Controllers\API\ItemAPIController::class, "show"])->whereNumber("id");
             Route::put("{id}", [App\Http\Controllers\API\ItemAPIController::class, "update"])->whereNumber("id");
             Route::delete("{id}", [App\Http\Controllers\API\ItemAPIController::class, "destroy"])->whereNumber("id");
+            Route::get("{id}/claim", [App\Http\Controllers\API\ItemAPIController::class, "getClaim"])->whereNumber("id");
+            Route::post("{id}/open-claim", [App\Http\Controllers\API\ItemAPIController::class, "openClaim"])->whereNumber("id");
         });
 
         Route::prefix("categories")->group(function () {
@@ -70,7 +74,9 @@ Route::prefix("v1")->group(function () {
         Route::group(["prefix" => "admin"], function () {
 
             Route::get("community", [DashboardController::class, "getComminityDetails"]);
+
             Route::get("popular-categories", [App\Http\Controllers\API\CategoryAPIController::class, "popular"]);
+
             Route::prefix("statistics")->group(function () {
 
                 Route::get("active-members", [StatisticsController::class, "activeMembers"]);
@@ -78,7 +84,15 @@ Route::prefix("v1")->group(function () {
                 Route::get("found-items", [StatisticsController::class, "foundItems"]);
                 Route::get("overall", [StatisticsController::class, "overall"]);
             });
+
             Route::get("list-users", [App\Http\Controllers\API\UserController::class, "list"]);
+
+            Route::prefix("messages")->group(function () {
+
+                Route::get("threads", [APIMessageController::class, "adminsThreads"]);
+                Route::get("threads/{thread_id}", [APIMessageController::class, "threadMessage"])->whereNumber("thread_id");
+                Route::post("reply/{thread_id}", [APIMessageController::class, "respondToMessage"])->whereNumber("message_id");
+            });
         });
     });
 });

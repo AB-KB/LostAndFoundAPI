@@ -39,4 +39,10 @@ class ItemMessageThread extends Model
     {
         return $this->hasMany(\App\Models\Message::class, 'item_message_thread_id');
     }
+
+
+    public function lastMessage(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(\App\Models\Message::class, 'item_message_thread_id')->latest();
+    }
 }

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign("item_message_thread_id")
                 ->on("item_message_threads")
                 ->references("id");
+            $table->boolean("admin_read")->default(false);
+            $table->boolean("normal_user_read")->default(false);
             $table->timestamps();
         });
     }
