@@ -53,6 +53,8 @@ Route::prefix("v1")->group(function () {
 
             Route::get("", [App\Http\Controllers\API\ItemAPIController::class, "index"]);
             Route::post("", [App\Http\Controllers\API\ItemAPIController::class, "store"]);
+            Route::get("{id}", [App\Http\Controllers\API\ItemAPIController::class, "show"])->whereNumber("id");
+
         });
 
         Route::prefix("categories")->group(function () {
