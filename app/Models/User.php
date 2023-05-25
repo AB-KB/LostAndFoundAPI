@@ -24,6 +24,7 @@ class User extends Authenticatable implements ImageableContract
         'email',
         'password',
         'phone_number',
+        'role',
         'village_id',
     ];
 

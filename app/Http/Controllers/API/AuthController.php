@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Village;
 use Exception;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends AppBaseController
@@ -105,5 +106,12 @@ class AuthController extends AppBaseController
 
             return $this->sendExceptionError($e);
         }
+    }
+
+    public function logout(){
+
+        request()->user()->currentAccessToken()->delete();
+
+        return $this->sendSuccess(__("Logout success"));
     }
 }

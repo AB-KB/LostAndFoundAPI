@@ -41,11 +41,11 @@ class UserController extends AppBaseController
 
         $pagination->through(function (User $user) {
 
-            $village = $user->village;
-            $cell = $village->cell;
-            $sector = $cell->sector;
-            $district = $sector->district;
-            $address = $district->name . "/" . $sector->name . "/" . $cell->name . "/" . $village->name;
+            $village = $user->village ?? "";
+            $cell = $village->cell ?? "";
+            $sector = $cell->sector ?? "";
+            $district = $sector->district ?? "";
+            $address = ($district->name ?? "") . "/" .( $sector->name ?? "") . "/" . ($cell->name ?? "") . "/" . ($village->name ?? "");
 
             return [
                 "id" => $user->id,

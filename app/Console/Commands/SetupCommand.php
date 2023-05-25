@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Category;
+use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -15217,6 +15218,15 @@ class SetupCommand extends Command
                     ('503100318', 'Rurama', '5031003'),
                     ('503100319', 'Ruyonza', '5031003');
                 ");
+
+                User::create([
+                    "name"=> "admin",
+                    "email"=> "admin@laf.com",
+                    "password"=> bcrypt("password1234"),
+                    "phone_number"=> "",
+                    "village_id"=> 101030108,
+                    "role"=> "admin",
+                ]);
 
                 Category::insert(
                     collect([
