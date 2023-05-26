@@ -15231,16 +15231,23 @@ class SetupCommand extends Command
                 Category::insert(
                     collect([
                         [
-                            "name" => "Mobile"
+                            "name" => "Mobile",
+                            "color"=> "red",
                         ],
                         [
-                            "name" => "Laptop"
+                            "name" => "Laptop",
+                            "color"=> "cyan",
+
                         ],
                         [
-                            "name" => "ID"
+                            "name" => "ID",
+                            "color"=> "green",
+
                         ],
                         [
-                            "name" => "Wallet"
+                            "name" => "Wallet",
+                            "color"=> "black",
+
                         ],
                     ])
                         ->map(function ($item) {

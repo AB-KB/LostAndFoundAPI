@@ -67,12 +67,12 @@ Route::prefix("v1")->group(function () {
 
             Route::get("", [App\Http\Controllers\API\CategoryAPIController::class, "index"]);
             Route::post("", [App\Http\Controllers\API\CategoryAPIController::class, "store"])
-                ->middleware("auth:admin");
+                ->middleware("admin");
             Route::put("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "update"]);
             Route::delete("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
         });
 
-        Route::group(["prefix" => "admin"], function () {
+        Route::group(["prefix" => "admin", "middleware"=> ["admin"]], function () {
 
             Route::get("community", [DashboardController::class, "getComminityDetails"]);
 
