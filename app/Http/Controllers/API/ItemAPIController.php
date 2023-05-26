@@ -58,10 +58,18 @@ class ItemAPIController extends AppBaseController
      */
     public function store(CreateItemAPIRequest $request): JsonResponse
     {
-        $input = $request->all();
+        $input = $request->only((new Item())->getFillable());
         $input["added_by"] = Auth::id();
 
+        /** @var Item */
         $item = $this->itemRepository->create($input);
+
+        $image = $request->file("image");
+        if ($image) {
+
+            $item->image = $image;
+            $item->save();
+        }
 
         return $this->sendResponse(
             new ItemResource($item),
@@ -174,8 +182,8 @@ class ItemAPIController extends AppBaseController
                 $thread->messages()->create([
                     "text" => $text,
                     "is_from_admin" => false,
-                    "admin_read"=> false,
-                    "normal_user_read"=> true,
+                    "admin_read" => false,
+                    "normal_user_read" => true,
                 ]);
             });
 
