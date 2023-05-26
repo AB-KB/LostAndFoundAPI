@@ -37,7 +37,7 @@ class ItemAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $pagination = $this->itemRepository->paginate(
+        $pagination = $this->itemRepository->allQuery()->latest()->paginate(
             perPage: 10,
             columns: ["*"]
         );

@@ -31,7 +31,7 @@ class ItemResource extends JsonResource
             "added_by"=> $this->addedBy->only(["id", "name"]),
             'created' => $this->created_at->diffForHumans(),
             'additional_info' => $this->additional_info,
-            "image"=> $this->getImagePublicLink(),
+            "image"=> asset($this->getImagePublicLink()),
         ];
     }
 }

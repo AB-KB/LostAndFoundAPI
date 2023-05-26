@@ -54,9 +54,9 @@ class UserController extends AppBaseController
                 "phone_number" => $user->phone_number,
                 "address" => $address,
                 "role" => $user->role,
+                "image"=> asset($user->getImagePublicLink()),
             ];
         });
-
 
         return $this->sendPaginatedResponse($pagination, __("List of our users"));
     }
