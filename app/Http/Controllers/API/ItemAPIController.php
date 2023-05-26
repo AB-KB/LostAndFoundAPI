@@ -116,6 +116,12 @@ class ItemAPIController extends AppBaseController
         }
 
         $item = $this->itemRepository->update($input, $id);
+        $image = $request->file("image");
+        if ($image) {
+
+            $item->image = $image;
+            $item->save();
+        }
 
         return $this->sendResponse(
             new ItemResource($item),

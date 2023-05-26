@@ -30,7 +30,7 @@ class CreateItemAPIRequest extends APIRequest
             "image"=> 'file|mimes:png,jpg,jpeg,gif',
             'cell_id' => 'required',
             'category_id' => 'required',
-            'additional_info'=> "nullable|array"
+            'additional_info'=> "nullable"
         ];
     }
 }
