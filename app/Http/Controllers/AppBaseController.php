@@ -22,7 +22,7 @@ class AppBaseController extends Controller
     {
 
 
-        $meta = collect($result)->only(["from", "to", "last_page", "total", "per_page"]);
+        $meta = collect($result)->except(["data"]);
         $data = collect($result)->only(["data"]);
 
         return response()

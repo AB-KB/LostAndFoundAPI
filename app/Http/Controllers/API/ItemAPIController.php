@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\NewItemEvent;
 use App\Exceptions\InvalidDataGivenException;
 use App\Exceptions\ItemNotFoundException;
 use App\Http\Requests\API\CreateItemAPIRequest;
@@ -13,10 +14,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Http\Requests\API\OpenClaimRequest;
 use App\Http\Resources\ItemResource;
+use App\Models\Category;
 use App\Models\ItemMessageThread;
+use App\Models\Matches;
 use Exception;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 /**
  * Class ItemAPIController
@@ -37,10 +42,16 @@ class ItemAPIController extends AppBaseController
      */
     public function index(Request $request): JsonResponse
     {
-        $pagination = $this->itemRepository->allQuery()->latest()->paginate(
-            perPage: 10,
-            columns: ["*"]
-        );
+
+        $pagination = $this->itemRepository->allQuery()
+            ->when(isset($request->status), fn ($qb) => $qb->whereStatus($request->status))
+            ->when(isset($request->type), fn ($qb) => $qb->whereType($request->type))
+            ->when(isset($request->category_id), fn ($qb) => $qb->where("category_id", $request->category_id))
+            ->latest()
+            ->paginate(
+                perPage: 10,
+                columns: ["*"]
+            );
 
         $pagination->through(function (Item $item) {
             return new ItemResource($item);
@@ -60,16 +71,14 @@ class ItemAPIController extends AppBaseController
     {
         $input = $request->only((new Item())->getFillable());
         $input["added_by"] = Auth::id();
+        if (empty($input["image"]) || trim($input["image"]) == "") {
+            return response()->json(["message" => __("Image is invalid")], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         /** @var Item */
         $item = $this->itemRepository->create($input);
 
-        $image = $request->file("image");
-        if ($image) {
-
-            $item->image = $image;
-            $item->save();
-        }
+        NewItemEvent::dispatch($item);
 
         return $this->sendResponse(
             new ItemResource($item),
@@ -232,5 +241,28 @@ class ItemAPIController extends AppBaseController
 
             return $this->sendExceptionError($th);
         }
+    }
+
+
+    public function getMatches(int $id)
+    {
+
+        $userId = Auth::id();
+        $item = Item::find($id);
+        if (is_null($item)) {
+
+            throw new ItemNotFoundException(__("Item not found"));
+        }
+
+
+        $matches = Matches::where("item_id", $item->id)->with("withItem")->get();
+
+        return $matches->map(function (Matches $match) {
+
+            return [
+                "item_details" => new ItemResource($match->withItem),
+                "percentage" => $match->percentage
+            ];
+        });
     }
 }

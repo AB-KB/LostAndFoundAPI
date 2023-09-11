@@ -50,7 +50,7 @@ class User extends Authenticatable implements ImageableContract
 
     public static function imageableFields(): array
     {
-        return ['profile'];
+        return ['image'];
     }
 
 

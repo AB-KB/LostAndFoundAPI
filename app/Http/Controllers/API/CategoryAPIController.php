@@ -119,12 +119,18 @@ class CategoryAPIController extends AppBaseController
     {
 
 
-        $result = DB::select("SELECT COUNT(c.id) as total, c.name FROM categories c
-        INNER JOIN items i ON i.category_id = c.id
+        $cats = DB::select("SELECT c.name, c.color FROM categories c
+        LEFT JOIN items i ON i.category_id = c.id
         GROUP BY c.id
         ORDER BY COUNT(c.id) DESC
-        LIMIT 3");
+        LIMIT 4");
 
+        $categoriesCount = Category::count();
+
+        $result = [
+            "total" => $categoriesCount,
+            "categories" =>  $cats
+        ];
 
         return $this->sendResponse($result, __("success"));
     }

@@ -8,14 +8,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Saad\ModelImages\Contracts\ImageableContract;
 use Saad\ModelImages\Traits\HasImages;
 
-class Item extends Model  implements ImageableContract
+class Item extends Model
 {
-    use HasFactory, HasImages;
+    use HasFactory;
 
     public $table = 'items';
 
     public $fillable = [
         'name',
+        'image',
         'type',
         'added_by',
         'cell_id',
@@ -30,13 +31,13 @@ class Item extends Model  implements ImageableContract
     ];
 
     public static array $rules = [
+        'status' => 'required|string|max:255|in:pending,processed',
         'name' => 'required|string|max:255',
         'type' => 'required|string|max:255|in:found,lost',
-        'status' => 'required|string|max:255|in:pending,processed',
-        'cell_id' => 'required',
-        'category_id' => 'required',
-        'created_at' => 'nullable',
-        'updated_at' => 'nullable'
+        "image" => 'required|string|url',
+        'cell_id' => 'required|integer|exists:cells,id',
+        'category_id' => 'required|integer|exists:categories,id',
+        'additional_info' => "nullable"
     ];
 
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -73,5 +74,24 @@ class Item extends Model  implements ImageableContract
             get: fn ($value) => json_decode($value, true),
             set: fn ($value) => json_encode($value),
         );
+    }
+
+
+    public function isFoundType()
+    {
+
+        return $this->type == "found";
+    }
+
+    public function isLostType()
+    {
+
+        return !$this->isFoundType();
+    }
+
+    public function matches()
+    {
+
+        return $this->hasManyThrough(Item::class, Matches::class);
     }
 }

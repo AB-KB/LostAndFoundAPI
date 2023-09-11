@@ -27,10 +27,10 @@ class CreateItemAPIRequest extends APIRequest
         return [
             'name' => 'required|string|max:255',
             'type' => 'required|string|max:255|in:found,lost',
-            "image"=> 'file|mimes:png,jpg,jpeg,gif',
-            'cell_id' => 'required',
-            'category_id' => 'required',
-            'additional_info'=> "nullable"
+            "image" => 'required|string|url',
+            'cell_id' => 'required|integer|exists:cells,id',
+            'category_id' => 'required|integer|exists:categories,id',
+            'additional_info' => "nullable"
         ];
     }
 }

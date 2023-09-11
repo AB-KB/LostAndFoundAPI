@@ -5,6 +5,9 @@ use App\Http\Controllers\API\GeoController;
 use App\Http\Controllers\API\MessageController as APIMessageController;
 use App\Http\Controllers\API\StatisticsController;
 use App\Http\Controllers\MessageController;
+use App\Models\Category;
+use App\Models\Item;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,6 +24,44 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix("v1")->group(function () {
 
+    Route::get("test", function () {
+        $additional_info = [
+            // "color" => "silver",
+            // "sizes" => "small",
+            // "size" => "small"
+        ];
+
+
+        $category = Category::find(2);
+        $name = "MacBook Prod";
+
+        $adds = [];
+        foreach ($additional_info as $key => $value) {
+
+            $adds[] = "jaro_winkler(JSON_EXTRACT(additional_info, '$.$key'), '$value')";
+        }
+
+
+        $matches = DB::select(
+            "SELECT
+                        id, name,added_by,(
+                            (jaro_winkler_similarity(name, ?) +
+                            ?
+                        ) / (1 + ?)) * 100 AS match_percentage
+                    FROM items
+                    WHERE
+                        `type` = 'lost'
+                    ORDER BY match_percentage DESC
+                    LIMIT 20",[
+                        $name,
+                        implode("+", $adds),
+                        count($adds)
+                    ]
+        );
+
+        return $matches;
+    });
+
     Route::prefix("auth")->group(function () {
 
         Route::post("login", [App\Http\Controllers\API\AuthController::class, "login"]);
@@ -31,6 +72,7 @@ Route::prefix("v1")->group(function () {
     Route::prefix("user")->middleware("auth:sanctum")->group(function () {
 
         Route::get("me", [App\Http\Controllers\API\UserController::class, "profile"]);
+        Route::get("update-profile", [App\Http\Controllers\API\UserController::class, "updateProfile"]);
     });
 
     Route::prefix("geo")->group(function () {
@@ -60,6 +102,7 @@ Route::prefix("v1")->group(function () {
             Route::put("{id}", [App\Http\Controllers\API\ItemAPIController::class, "update"])->whereNumber("id");
             Route::delete("{id}", [App\Http\Controllers\API\ItemAPIController::class, "destroy"])->whereNumber("id");
             Route::get("{id}/claim", [App\Http\Controllers\API\ItemAPIController::class, "getClaim"])->whereNumber("id");
+            Route::get("{id}/matches", [App\Http\Controllers\API\ItemAPIController::class, "getMatches"])->whereNumber("id");
             Route::post("{id}/open-claim", [App\Http\Controllers\API\ItemAPIController::class, "openClaim"])->whereNumber("id");
         });
 
@@ -72,7 +115,7 @@ Route::prefix("v1")->group(function () {
             Route::delete("{id}", [App\Http\Controllers\API\CategoryAPIController::class, "destroy"]);
         });
 
-        Route::group(["prefix" => "admin", "middleware"=> ["admin"]], function () {
+        Route::group(["prefix" => "admin", "middleware" => ["admin"]], function () {
 
             Route::get("community", [DashboardController::class, "getComminityDetails"]);
 

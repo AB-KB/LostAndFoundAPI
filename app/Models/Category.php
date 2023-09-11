@@ -19,7 +19,7 @@ class Category extends Model
 
     public static array $rules = [
         'name' => 'required|string|max:255',
-        'teal' => 'required|string|max:10',
+        'color' => 'required|string|max:10',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'
     ];

@@ -20,9 +20,8 @@ class MessageController extends AppBaseController
 
         $allThreads = ItemMessageThread::with(["item", "user", "lastMessage"])
             ->latest()
-            ->paginate();
-
-        $allThreads->through(function (ItemMessageThread $thread) {
+            ->get()
+            ->map(function (ItemMessageThread $thread) {
 
             return [
                 "id" => $thread->id,
@@ -33,7 +32,7 @@ class MessageController extends AppBaseController
         });
 
 
-        return $this->sendPaginatedResponse($allThreads, __("Message threads"));
+        return $this->sendResponse($allThreads, __("Message threads"));
     }
 
 
@@ -47,7 +46,7 @@ class MessageController extends AppBaseController
         }
 
 
-        $messages = $thread->lastMessage()->latest()->paginate();
+        $messages = $thread->messages()->paginate();
 
         $messages->through(function (Message $message) {
 
